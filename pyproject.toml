@@ -1,0 +1,178 @@
+# =============================================================================
+# Fyers MCP Server — Project Configuration
+# =============================================================================
+# A Model Context Protocol (MCP) server providing complete Fyers API v3
+# integration for algorithmic trading, market data, and portfolio management.
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Build System (PEP 517/518)
+# ---------------------------------------------------------------------------
+[build-system]
+requires = ["hatchling>=1.21.0"]
+build-backend = "hatchling.build"
+
+# ---------------------------------------------------------------------------
+# Project Metadata (PEP 621)
+# ---------------------------------------------------------------------------
+[project]
+name = "fyers-mcp-server"
+version = "7.0.0"
+description = "MCP server for Fyers API v3 — trade execution, market data, portfolio management, and technical analysis."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.11"
+keywords = [
+    "mcp",
+    "fyers",
+    "trading",
+    "stock-market",
+    "algorithmic-trading",
+    "market-data",
+    "portfolio",
+    "broker-api",
+    "nse",
+    "bse",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Financial and Insurance Industry",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Topic :: Office/Business :: Financial :: Investment",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+# authors = [
+#     { name = "YOUR_NAME" },
+# ]
+
+# ---------------------------------------------------------------------------
+# Dependencies
+# ---------------------------------------------------------------------------
+dependencies = [
+    "mcp>=1.0.0",
+    "fyers-apiv3==3.1.11",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.4.0",
+    "mypy>=1.10.0",
+    "pytest>=8.0.0",
+    "pytest-cov>=5.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pre-commit>=3.7.0",
+]
+
+# ---------------------------------------------------------------------------
+# Entry Points
+# ---------------------------------------------------------------------------
+[project.scripts]
+fyers-mcp-server = "fyers_mcp_server:main"
+
+# ---------------------------------------------------------------------------
+# Project URLs
+# ---------------------------------------------------------------------------
+[project.urls]
+# Homepage = "https://github.com/YOUR_USERNAME/fyers-mcp-server"
+# Repository = "https://github.com/YOUR_USERNAME/fyers-mcp-server"
+# Issues = "https://github.com/YOUR_USERNAME/fyers-mcp-server/issues"
+
+# =============================================================================
+# Tool Configuration
+# =============================================================================
+
+# ---------------------------------------------------------------------------
+# Hatch — Build targets
+# ---------------------------------------------------------------------------
+[tool.hatch.build.targets.wheel]
+packages = ["tools"]
+
+# ---------------------------------------------------------------------------
+# Ruff — Linter & Formatter
+# ---------------------------------------------------------------------------
+[tool.ruff]
+target-version = "py311"
+line-length = 120
+
+[tool.ruff.lint]
+select = [
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "N",    # pep8-naming
+    "UP",   # pyupgrade
+    "B",    # flake8-bugbear
+    "SIM",  # flake8-simplify
+    "TCH",  # flake8-type-checking
+    "RUF",  # ruff-specific rules
+]
+ignore = [
+    "E501",   # line too long — handled by formatter
+    "B008",   # do not perform function calls in argument defaults
+    "RUF012", # mutable class variables without ClassVar
+]
+
+[tool.ruff.lint.isort]
+known-first-party = ["tools"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+docstring-code-format = true
+
+# ---------------------------------------------------------------------------
+# Mypy — Static Type Checking
+# ---------------------------------------------------------------------------
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+strict_equality = true
+show_error_codes = true
+
+[[tool.mypy.overrides]]
+module = ["fyers_apiv3.*"]
+ignore_missing_imports = true
+
+# ---------------------------------------------------------------------------
+# Pytest — Test Runner
+# ---------------------------------------------------------------------------
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-ra -q --strict-markers --strict-config"
+testpaths = ["tests"]
+pythonpath = ["."]
+
+# ---------------------------------------------------------------------------
+# Coverage — Test Coverage
+# ---------------------------------------------------------------------------
+[tool.coverage.run]
+source = ["tools", "fyers_mcp_server"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
+fail_under = 60
+
+# ---------------------------------------------------------------------------
+# uv — Dependency resolver overrides
+# ---------------------------------------------------------------------------
+[tool.uv]
+override-dependencies = [
+    "requests==2.32.3",
+]
